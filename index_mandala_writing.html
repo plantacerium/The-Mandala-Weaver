@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Mandala Weaver | Ancient Mystical Science</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet" />
+
+  <style data-purpose="theme-variables">
+    :root {
+      --color-gold: #d4af37;
+      --color-obsidian: #0b0b0b;
+      --color-charcoal: #1a1a1a;
+      --color-parchment: #f4e4bc;
+    }
+  </style>
+
+  <style data-purpose="global-layout">
+    body {
+      background-color: var(--color-obsidian);
+      color: var(--color-parchment);
+      font-family: 'Playfair Display', serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+    }
+
+    .bg-gold {
+      background-color: var(--color-gold) !important;
+    }
+
+    .border-gold {
+      border-color: var(--color-gold) !important;
+    }
+
+    .text-gold {
+      color: var(--color-gold) !important;
+    }
+
+    .mystic-bg {
+      background: radial-gradient(circle at center, #1a1a1a 0%, #0b0b0b 100%);
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+    }
+
+    .gold-glow {
+      filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4));
+    }
+
+    .parchment-text {
+      font-family: 'Great Vibes', cursive;
+    }
+
+    .label-font {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.1em;
+    }
+  </style>
+
+  <style data-purpose="mandala-styling">
+    .mandala-ring {
+      fill: none;
+      stroke: rgba(212, 175, 55, 0.3);
+      stroke-width: 1;
+      transition: all 0.3s ease;
+    }
+
+    .mandala-segment:hover .segment-path {
+      stroke: var(--color-gold);
+      stroke-width: 2;
+      cursor: pointer;
+    }
+
+    .segment-text {
+      fill: var(--color-gold);
+      font-size: 14px;
+      pointer-events: none;
+      font-family: 'Great Vibes', cursive;
+    }
+
+    .bindu {
+      fill: var(--color-obsidian);
+      stroke: var(--color-gold);
+      stroke-width: 2;
+      filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.6));
+    }
+
+    /* Animation Logic for Vectors */
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin-reverse {
+      100% {
+        transform: rotate(-360deg);
+      }
+    }
+
+    @keyframes flow-in {
+      to {
+        stroke-dashoffset: 20;
+      }
+    }
+
+    @keyframes flow-out {
+      to {
+        stroke-dashoffset: -20;
+      }
+    }
+
+    .reading-indicator {
+      stroke: var(--color-gold);
+      stroke-width: 1.5;
+      stroke-dasharray: 4, 12;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+
+    .flow-inward .reading-indicator {
+      opacity: 0.6;
+      animation: flow-in 1.5s linear infinite;
+    }
+
+    .flow-outward .reading-indicator {
+      opacity: 0.6;
+      animation: flow-out 1.5s linear infinite;
+    }
+  </style>
+</head>
+
+<body class="flex">
+
+  <div class="mystic-bg"></div>
+
+  <aside
+    class="w-80 h-full border-r border-yellow-900/30 bg-black/40 backdrop-blur-md p-6 overflow-y-auto flex flex-col gap-8 z-10"
+    data-purpose="control-panel">
+    <div>
+      <h1 class="label-font text-2xl text-gold mb-2 border-b border-yellow-900/50 pb-2">Mandala Weaver</h1>
+      <p class="text-xs italic opacity-70">Synthesizing thought through radial geometry</p>
+    </div>
+
+    <section class="mb-8">
+      <h2 class="label-font text-sm mb-4 text-yellow-600">Canvas Navigation</h2>
+      <div class="grid grid-cols-3 gap-2">
+        <button class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font transition-all"
+          onclick="adjustZoom(0.1)">Zoom +</button>
+        <button class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font transition-all"
+          onclick="adjustZoom(-0.1)">Zoom -</button>
+        <button class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font transition-all"
+          onclick="resetZoom()">Reset</button>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="label-font text-sm mb-4 text-yellow-600">Sacred Geometry</h2>
+      <div class="space-y-4">
+        <button
+          class="w-full py-2 px-4 border border-yellow-700/50 hover:bg-yellow-900/20 text-xs label-font transition-all text-gold"
+          onclick="addRing()">
+          Expand Sphere (+ Ring)
+        </button>
+        <div class="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar" id="ring-controls-list">
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="label-font text-sm mb-4 text-yellow-600">Reading Vectors</h2>
+      <div class="space-y-3 text-[10px] label-font uppercase tracking-widest">
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('inward')">
+          <div class="w-3 h-3 border border-gold transition-colors" id="btn-inward"></div>
+          <span class="group-hover:text-gold transition-colors">Inward Path</span>
+        </div>
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('outward')">
+          <div class="w-3 h-3 border border-gold transition-colors" id="btn-outward"></div>
+          <span class="group-hover:text-gold transition-colors">Outward Path</span>
+        </div>
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('clockwise')">
+          <div class="w-3 h-3 border border-gold transition-colors" id="btn-clockwise"></div>
+          <span class="group-hover:text-gold transition-colors">Clockwise</span>
+        </div>
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('counter')">
+          <div class="w-3 h-3 border border-gold transition-colors" id="btn-counter"></div>
+          <span class="group-hover:text-gold transition-colors">Counter-Clock</span>
+        </div>
+      </div>
+      <p class="mt-4 text-[10px] italic opacity-50 font-sans leading-relaxed">
+        * Inward: Distillation to essence.<br />
+        * Outward: Manifestation into form.<br />
+        * Clockwise: The evolution of time.<br />
+        * Counter: Unraveling the past.
+      </p>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="label-font text-sm mb-4 text-yellow-600">Archive & Export</h2>
+      <div class="grid grid-cols-1 gap-2">
+        <button class="w-full py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font text-gold"
+          onclick="exportToImage()">Save Complete Mandala (.png)</button>
+        <div class="grid grid-cols-2 gap-2">
+          <button class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font"
+            onclick="saveAsJSON()">Save JSON</button>
+          <label
+            class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font text-center cursor-pointer">
+            Upload JSON<input class="hidden" onchange="uploadJSON(event)" type="file" />
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-auto pt-6 text-[10px] text-center opacity-40 uppercase tracking-widest label-font">
+      The Great Silence (Bindu) is Eternal
+    </footer>
+  </aside>
+  <main class="flex-1 relative flex items-center justify-center overflow-hidden">
+    <svg class="gold-glow" height="800" id="mandala-svg" viewBox="0 0 800 800" width="800">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur result="coloredBlur" stdDeviation="2.5"></feGaussianBlur>
+          <feMerge>
+            <feMergeNode in="coloredBlur"></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+        </filter>
+      </defs>
+      <g class="pointer-events-none" id="flow-indicators" transform="translate(400, 400)"></g>
+      <g id="mandala-content" transform="translate(400, 400)">
+        <g id="zoom-layer">
+          <g id="rings-layer"></g>
+          <circle class="bindu" cx="0" cy="0" r="30"></circle>
+          <text class="label-font text-[8px] fill-yellow-600/50 pointer-events-none uppercase" text-anchor="middle"
+            x="0" y="3">Bindu</text>
+        </g>
+      </g>
+    </svg>
+
+    <div class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4" id="edit-overlay">
+      <div class="bg-charcoal border border-yellow-700 p-8 max-w-md w-full shadow-2xl">
+        <label class="block label-font text-sm mb-4 text-gold">Inscribe your thought:</label>
+        <textarea
+          class="w-full bg-black border border-yellow-900/50 text-parchment p-4 focus:ring-1 focus:ring-gold focus:outline-none parchment-text text-xl"
+          id="section-input" rows="3"></textarea>
+        <div class="flex justify-end gap-4 mt-6">
+          <button class="label-font text-xs opacity-50 hover:opacity-100 uppercase"
+            onclick="closeEditor()">Discard</button>
+          <button class="label-font text-xs px-6 py-2 bg-yellow-900/30 border border-yellow-600 text-gold uppercase"
+            onclick="saveSectionText()">Inscribe</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script data-purpose="mandala-engine">
+    const svg = document.getElementById('mandala-svg');
+    const ringsLayer = document.getElementById('rings-layer');
+    const ringControlsList = document.getElementById('ring-controls-list');
+    const editOverlay = document.getElementById('edit-overlay');
+    const sectionInput = document.getElementById('section-input');
+    const zoomLayer = document.getElementById('zoom-layer');
+    const flowIndicators = document.getElementById('flow-indicators');
+
+    let mandalaData = [
+      { radius: 100, sections: 4, rotation: 0, texts: ["Spirit", "Air", "Earth", "Water", "Fire"] },
+      { radius: 180, sections: 8, rotation: 0, texts: Array(8).fill("Seek the truth within the ink") },
+      { radius: 280, sections: 12, rotation: 0, texts: Array(12).fill("Cycle of Time") }
+    ];
+
+    let currentZoom = 1;
+    let currentEditing = { ringIndex: -1, sectionIndex: -1 };
+    let flowState = { inward: false, outward: false, clockwise: false, counter: false };
+
+    function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+      const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+      return { x: centerX + (radius * Math.cos(angleInRadians)), y: centerY + (radius * Math.sin(angleInRadians)) };
+    }
+
+    // FIXED: Draws arcs in a way that prevents text from flipping upside down on the bottom half
+    function describeArc(x, y, radius, startAngle, endAngle) {
+      const midAngle = (startAngle + endAngle) / 2;
+      // If the arc is largely on the bottom half of the circle, we reverse the draw direction
+      // so the text renders upright (left-to-right relative to the viewer).
+      const flip = midAngle > 90 && midAngle < 270;
+
+      if (!flip) {
+        const start = polarToCartesian(x, y, radius, startAngle);
+        const end = polarToCartesian(x, y, radius, endAngle);
+        return ["M", start.x, start.y, "A", radius, radius, 0, 0, 1, end.x, end.y].join(" ");
+      } else {
+        const start = polarToCartesian(x, y, radius, endAngle);
+        const end = polarToCartesian(x, y, radius, startAngle);
+        return ["M", start.x, start.y, "A", radius, radius, 0, 0, 0, end.x, end.y].join(" ");
+      }
+    }
+
+    function renderMandala() {
+      ringsLayer.innerHTML = '';
+
+      mandalaData.forEach((ring, rIdx) => {
+        // Create animation wrapper for clockwise/counter-clockwise vectors
+        const animGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        if (flowState.clockwise) animGroup.style.animation = `spin ${30 + (rIdx * 15)}s linear infinite`;
+        if (flowState.counter) animGroup.style.animation = `spin-reverse ${30 + (rIdx * 15)}s linear infinite`;
+
+        const ringGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        ringGroup.setAttribute('transform', `rotate(${ring.rotation || 0})`);
+        const angleStep = 360 / ring.sections;
+
+        // We add a tiny gap between segments for visual clarity
+        const padding = 1;
+
+        for (let i = 0; i < ring.sections; i++) {
+          const startAngle = (i * angleStep) + padding;
+          const endAngle = ((i + 1) * angleStep) - padding;
+          const pathId = `path-${rIdx}-${i}`;
+
+          const d = describeArc(0, 0, ring.radius, startAngle, endAngle);
+
+          const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          g.setAttribute('class', 'mandala-segment');
+          g.onclick = () => openEditor(rIdx, i);
+
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute('id', pathId);
+          path.setAttribute('d', d);
+          path.setAttribute('class', 'segment-path fill-none stroke-yellow-900/30');
+
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          text.setAttribute('class', 'segment-text');
+
+          const textPath = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
+          textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `#${pathId}`);
+          textPath.setAttribute('startOffset', '50%');
+          textPath.setAttribute('text-anchor', 'middle');
+          // A slight baseline shift helps position text perfectly on the line
+          textPath.setAttribute('dominant-baseline', 'middle');
+          textPath.textContent = ring.texts[i] || "";
+
+          text.appendChild(textPath);
+          g.appendChild(path);
+          g.appendChild(text);
+          ringGroup.appendChild(g);
+        }
+
+        animGroup.appendChild(ringGroup);
+        ringsLayer.appendChild(animGroup);
+      });
+
+      renderFlowIndicators();
+      renderControls();
+    }
+
+    function renderFlowIndicators() {
+      flowIndicators.innerHTML = '';
+
+      if (flowState.inward || flowState.outward) {
+        const maxR = mandalaData.length > 0 ? mandalaData[mandalaData.length - 1].radius + 40 : 300;
+        for (let i = 0; i < 12; i++) {
+          const angle = i * 30;
+          const end = polarToCartesian(0, 0, maxR, angle);
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          // Start slightly away from the center to respect the Bindu
+          const startOffset = polarToCartesian(0, 0, 40, angle);
+          line.setAttribute("x1", startOffset.x); line.setAttribute("y1", startOffset.y);
+          line.setAttribute("x2", end.x); line.setAttribute("y2", end.y);
+          line.setAttribute("class", "reading-indicator");
+          flowIndicators.appendChild(line);
+        }
+        svg.classList.toggle('flow-inward', flowState.inward);
+        svg.classList.toggle('flow-outward', flowState.outward);
+      } else {
+        svg.classList.remove('flow-inward', 'flow-outward');
+      }
+    }
+
+    function renderControls() {
+      ringControlsList.innerHTML = '';
+      mandalaData.forEach((ring, idx) => {
+        const div = document.createElement('div');
+        div.className = 'flex flex-col gap-1 p-2 bg-yellow-900/10 border border-yellow-900/30 text-[10px]';
+        div.innerHTML = `
+        <div class="flex justify-between items-center mb-1">
+          <span class="label-font text-yellow-500">Ring ${idx + 1}</span>
+          <button class="text-red-900 hover:text-red-600 font-bold" onclick="removeRing(${idx})">✕</button>
+        </div>
+        <div class="flex items-center justify-between gap-2">
+          <span>Sections:</span>
+          <input class="bg-black border border-yellow-900/50 w-12 text-center p-1 text-gold" onchange="updateSections(${idx}, this.value)" type="number" value="${ring.sections}"/>
+          <span class="ml-2">Rotation:</span>
+          <button class="text-gold border border-yellow-900/50 px-2 hover:bg-yellow-900/30" onclick="rotateRing(${idx}, -15)">↺</button>
+          <button class="text-gold border border-yellow-900/50 px-2 hover:bg-yellow-900/30" onclick="rotateRing(${idx}, 15)">↻</button>
+        </div>
+      `;
+        ringControlsList.appendChild(div);
+      });
+    }
+
+    function addRing() {
+      const lastRadius = mandalaData.length > 0 ? mandalaData[mandalaData.length - 1].radius : 60;
+      mandalaData.push({ radius: lastRadius + 80, sections: 8, rotation: 0, texts: Array(8).fill("New Path...") });
+      renderMandala();
+    }
+
+    function removeRing(idx) {
+      mandalaData.splice(idx, 1);
+      renderMandala();
+    }
+
+    function updateSections(idx, val) {
+      const num = parseInt(val);
+      if (num < 1) return;
+      mandalaData[idx].sections = num;
+
+      // Ensure array length matches section count
+      while (mandalaData[idx].texts.length < num) mandalaData[idx].texts.push("Empty");
+      mandalaData[idx].texts = mandalaData[idx].texts.slice(0, num);
+
+      renderMandala();
+    }
+
+    function rotateRing(idx, deg) {
+      mandalaData[idx].rotation = (mandalaData[idx].rotation || 0) + deg;
+      renderMandala();
+    }
+
+    function adjustZoom(delta) {
+      currentZoom = Math.max(0.3, Math.min(3, currentZoom + delta));
+      zoomLayer.setAttribute('transform', `scale(${currentZoom})`);
+    }
+
+    function resetZoom() {
+      currentZoom = 1;
+      zoomLayer.setAttribute('transform', 'scale(1)');
+    }
+
+    svg.onwheel = (e) => {
+      e.preventDefault();
+      adjustZoom(e.deltaY > 0 ? -0.05 : 0.05);
+    };
+
+    function toggleFlow(type) {
+      // Handle mutual exclusivity for logical flow
+      if (type === 'clockwise' && flowState.counter) toggleFlow('counter');
+      if (type === 'counter' && flowState.clockwise) toggleFlow('clockwise');
+      if (type === 'inward' && flowState.outward) toggleFlow('outward');
+      if (type === 'outward' && flowState.inward) toggleFlow('inward');
+
+      flowState[type] = !flowState[type];
+      document.getElementById(`btn-${type}`).classList.toggle('bg-gold', flowState[type]);
+      renderMandala();
+    }
+
+    function openEditor(rIdx, sIdx) {
+      currentEditing = { ringIndex: rIdx, sectionIndex: sIdx };
+      sectionInput.value = mandalaData[rIdx].texts[sIdx];
+      editOverlay.classList.remove('hidden');
+      sectionInput.focus();
+    }
+
+    function closeEditor() {
+      editOverlay.classList.add('hidden');
+    }
+
+    function saveSectionText() {
+      mandalaData[currentEditing.ringIndex].texts[currentEditing.sectionIndex] = sectionInput.value;
+      closeEditor();
+      renderMandala();
+    }
+
+    function saveAsJSON() {
+      const blob = new Blob([JSON.stringify(mandalaData)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mandala_config.json';
+      a.click();
+    }
+
+    function uploadJSON(e) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        mandalaData = JSON.parse(ev.target.result);
+        renderMandala();
+      };
+      reader.readAsText(e.target.files[0]);
+    }
+
+    function exportToImage() {
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const canvas = document.createElement("canvas");
+      canvas.width = 800; canvas.height = 800;
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.onload = () => {
+        ctx.fillStyle = '#0b0b0b';
+        ctx.fillRect(0, 0, 800, 800);
+        ctx.drawImage(img, 0, 0);
+        const link = document.createElement('a');
+        link.download = 'mandala.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      };
+      img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+    }
+
+    // Initial Render
+    renderMandala();
+  </script>
+</body>
+
+</html>
