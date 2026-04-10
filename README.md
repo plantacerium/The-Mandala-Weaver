@@ -32,6 +32,15 @@ Weaving a mandala is an act of "Sacred Inscription." By placing text within radi
 *   **Visual Alchemy:** A premium interface themed in Obsidian, Gold, and Parchment, designed to elevate the user into a state of focused contemplation.
 *   **Temporal Animation:** Engage the "Reading Vectors" to see your thoughts physically flow inward, outward, or spin in temporal cycles.
 *   **Archive & Export:** Save your thought-structures as `JSON` configurations for future meditation or export high-resolution `PNG` captures.
+## ⚡ Support
+<div align="center">
+
+**Made with ❤️ and ☕ by the Plantacerium**
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/plantacerium)
+
+⭐**Star us on GitHub**⭐
+</div>
 
 ## Meditation on Usage
 
@@ -42,4 +51,4 @@ Weaving a mandala is an act of "Sacred Inscription." By placing text within radi
 
 ---
 
-*The Great Silence (Bindu) is Eternal.*
+*The Great Silence (Bindu) is Eternal.*
