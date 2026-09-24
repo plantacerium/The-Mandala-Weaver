@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
   <title>Mandala Weaver | Ancient Mystical Science</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com" rel="preconnect" />
@@ -12,19 +12,38 @@
     href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
     rel="stylesheet" />
 
-  <style data-purpose="theme-variables">
+  <style>
     :root {
-      --color-gold: #d4af37;
-      --color-obsidian: #0b0b0b;
-      --color-charcoal: #1a1a1a;
-      --color-parchment: #f4e4bc;
+      /* Classic Gold (Default) */
+      --color-primary: #d4af37;
+      --color-primary-rgb: 212, 175, 55;
+      --color-bg-dark: #0b0b0b;
+      --color-bg-light: #1a1a1a;
+      --color-text: #f4e4bc;
+      --color-accent: #8b6b23;
     }
-  </style>
 
-  <style data-purpose="global-layout">
+    [data-theme="celestial"] {
+      --color-primary: #4a9eff;
+      --color-primary-rgb: 74, 158, 255;
+      --color-bg-dark: #050b14;
+      --color-bg-light: #101c30;
+      --color-text: #e0f0ff;
+      --color-accent: #2c6eb5;
+    }
+
+    [data-theme="emerald"] {
+      --color-primary: #50c878;
+      --color-primary-rgb: 80, 200, 120;
+      --color-bg-dark: #07120a;
+      --color-bg-light: #122818;
+      --color-text: #e2f5e8;
+      --color-accent: #2e8b4e;
+    }
+
     body {
-      background-color: var(--color-obsidian);
-      color: var(--color-parchment);
+      background-color: var(--color-bg-dark);
+      color: var(--color-text);
       font-family: 'Playfair Display', serif;
       overflow: hidden;
       height: 100vh;
@@ -32,94 +51,105 @@
       margin: 0;
     }
 
-    .bg-gold {
-      background-color: var(--color-gold) !important;
+    /* Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
     }
-
-    .border-gold {
-      border-color: var(--color-gold) !important;
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
     }
-
-    .text-gold {
-      color: var(--color-gold) !important;
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: var(--color-primary);
+      border-radius: 4px;
     }
 
     .mystic-bg {
-      background: radial-gradient(circle at center, #1a1a1a 0%, #0b0b0b 100%);
+      background: radial-gradient(circle at center, var(--color-bg-light) 0%, var(--color-bg-dark) 100%);
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+    }
+
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.8) 100%);
+      z-index: 10;
+    }
+
+    #particles-canvas {
       position: absolute;
       inset: 0;
       z-index: -1;
+      pointer-events: none;
     }
 
-    .gold-glow {
-      filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4));
+    .shimmer-text {
+      background: linear-gradient(90deg, var(--color-primary) 0%, #fff 50%, var(--color-primary) 100%);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: shimmer 3s linear infinite;
     }
 
-    .parchment-text {
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+
+    .bindu-pulse {
+      animation: pulse-glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-glow {
+      from { filter: drop-shadow(0 0 10px rgba(var(--color-primary-rgb), 0.6)) brightness(1); }
+      to { filter: drop-shadow(0 0 25px rgba(var(--color-primary-rgb), 1)) brightness(1.3); }
+    }
+
+    .breathing-mandala {
+      animation: breathe 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes breathe {
+      from { transform: scale(0.98); }
+      to { transform: scale(1.02); }
+    }
+
+    .mandala-ring {
+      fill: none;
+      stroke-width: 1;
+      transition: all 0.3s ease;
+    }
+
+    .mandala-segment {
+      outline: none;
+    }
+
+    .mandala-segment:hover .segment-path, .mandala-segment:focus .segment-path {
+      stroke: var(--color-primary) !important;
+      stroke-width: 2 !important;
+      cursor: pointer;
+    }
+
+    .segment-text {
+      pointer-events: none;
       font-family: 'Great Vibes', cursive;
+      transition: all 0.3s ease;
     }
 
     .label-font {
       font-family: 'Cinzel', serif;
       letter-spacing: 0.1em;
     }
-  </style>
 
-  <style data-purpose="mandala-styling">
-    .mandala-ring {
-      fill: none;
-      stroke: rgba(212, 175, 55, 0.3);
-      stroke-width: 1;
-      transition: all 0.3s ease;
-    }
-
-    .mandala-segment:hover .segment-path {
-      stroke: var(--color-gold);
-      stroke-width: 2;
-      cursor: pointer;
-    }
-
-    .segment-text {
-      fill: var(--color-gold);
-      font-size: 14px;
-      pointer-events: none;
-      font-family: 'Great Vibes', cursive;
-    }
-
-    .bindu {
-      fill: var(--color-obsidian);
-      stroke: var(--color-gold);
-      stroke-width: 2;
-      filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.6));
-    }
-
-    /* Animation Logic for Vectors */
-    @keyframes spin {
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    @keyframes spin-reverse {
-      100% {
-        transform: rotate(-360deg);
-      }
-    }
-
-    @keyframes flow-in {
-      to {
-        stroke-dashoffset: 20;
-      }
-    }
-
-    @keyframes flow-out {
-      to {
-        stroke-dashoffset: -20;
-      }
-    }
+    /* Vector Animations */
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+    @keyframes flow-in { to { stroke-dashoffset: 40; } }
+    @keyframes flow-out { to { stroke-dashoffset: -40; } }
 
     .reading-indicator {
-      stroke: var(--color-gold);
       stroke-width: 1.5;
       stroke-dasharray: 4, 12;
       opacity: 0;
@@ -127,14 +157,75 @@
       pointer-events: none;
     }
 
-    .flow-inward .reading-indicator {
-      opacity: 0.6;
-      animation: flow-in 1.5s linear infinite;
+    .flow-inward .reading-indicator { opacity: 0.6; animation: flow-in var(--flow-speed, 1.5s) linear infinite; }
+    .flow-outward .reading-indicator { opacity: 0.6; animation: flow-out var(--flow-speed, 1.5s) linear infinite; }
+
+    .pulse-mode .mandala-segment {
+      animation: segment-pulse 2s infinite;
+    }
+    @keyframes segment-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
-    .flow-outward .reading-indicator {
-      opacity: 0.6;
-      animation: flow-out 1.5s linear infinite;
+    /* Modals & Overlays */
+    .glass-panel {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(var(--color-primary-rgb), 0.3);
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
+      opacity: 0;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .context-menu {
+      position: fixed;
+      z-index: 1000;
+      display: none;
+    }
+    .context-menu.active {
+      display: block;
+    }
+
+    /* Tooltip */
+    #tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 60;
+      transition: opacity 0.2s;
+      opacity: 0;
+    }
+
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    
+    /* Responsive Sidebar */
+    @media (max-width: 768px) {
+      aside {
+        position: fixed;
+        left: -100%;
+        transition: left 0.3s ease;
+        z-index: 40;
+      }
+      aside.open {
+        left: 0;
+      }
     }
   </style>
 </head>
@@ -142,156 +233,414 @@
 <body class="flex">
 
   <div class="mystic-bg"></div>
+  <canvas id="particles-canvas"></canvas>
+  <div class="vignette"></div>
 
-  <aside
-    class="w-80 h-full border-r border-yellow-900/30 bg-black/40 backdrop-blur-md p-6 overflow-y-auto flex flex-col gap-8 z-10"
-    data-purpose="control-panel">
-    <div>
-      <h1 class="label-font text-2xl text-gold mb-2 border-b border-yellow-900/50 pb-2">Mandala Weaver</h1>
-      <p class="text-xs italic opacity-70">Synthesizing thought through radial geometry</p>
+  <!-- Mobile Toggle -->
+  <button id="sidebar-toggle" class="md:hidden fixed top-4 left-4 z-50 p-2 glass-panel text-[var(--color-primary)] rounded-md" onclick="toggleSidebar()">
+    ☰
+  </button>
+
+  <aside id="sidebar" class="w-80 h-full glass-panel p-6 overflow-y-auto flex flex-col gap-6 z-40 custom-scrollbar flex-shrink-0">
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="label-font text-2xl mb-2 border-b border-[var(--color-primary)]/30 pb-2 shimmer-text font-bold">Mandala Weaver</h1>
+        <p class="text-xs italic opacity-70">Synthesizing thought through radial geometry</p>
+      </div>
+      <button class="md:hidden text-[var(--color-primary)] text-xl" onclick="toggleSidebar()">✕</button>
     </div>
 
-    <section class="mb-8">
-      <h2 class="label-font text-sm mb-4 text-yellow-600">Canvas Navigation</h2>
-      <div class="grid grid-cols-3 gap-2">
-        <button class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font transition-all"
-          onclick="adjustZoom(0.1)">Zoom +</button>
-        <button class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font transition-all"
-          onclick="adjustZoom(-0.1)">Zoom -</button>
-        <button class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font transition-all"
-          onclick="resetZoom()">Reset</button>
+    <!-- Themes & Layout -->
+    <details class="group bg-black/30 rounded border border-[var(--color-primary)]/20">
+      <summary class="label-font text-sm p-3 cursor-pointer text-[var(--color-primary)] font-bold flex justify-between items-center">
+        Global Settings
+        <span class="transform group-open:rotate-180 transition-transform">▼</span>
+      </summary>
+      <div class="p-3 pt-0 space-y-4">
+        <div>
+          <label class="text-xs label-font mb-1 block opacity-80">Theme</label>
+          <div class="grid grid-cols-3 gap-1">
+            <button class="py-1 text-[10px] border border-[#d4af37] bg-[#1a1a1a] text-[#d4af37]" onclick="setTheme('classic')">Gold</button>
+            <button class="py-1 text-[10px] border border-[#4a9eff] bg-[#101c30] text-[#4a9eff]" onclick="setTheme('celestial')">Celestial</button>
+            <button class="py-1 text-[10px] border border-[#50c878] bg-[#122818] text-[#50c878]" onclick="setTheme('emerald')">Emerald</button>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs label-font mb-1 block opacity-80">Rotation Speed</label>
+          <input type="range" id="global-speed" min="10" max="100" value="30" class="w-full accent-[var(--color-primary)]" oninput="updateSpeed(this.value)">
+        </div>
+        <div class="flex items-center gap-2 text-xs label-font opacity-80">
+          <input type="checkbox" id="breathing-toggle" onchange="toggleBreathing(this.checked)" class="accent-[var(--color-primary)]">
+          <label for="breathing-toggle">Breathing Animation</label>
+        </div>
+        <div class="flex items-center gap-2 text-xs label-font opacity-80">
+          <input type="checkbox" id="symmetry-toggle" class="accent-[var(--color-primary)]">
+          <label for="symmetry-toggle">Symmetry Mode</label>
+        </div>
+        <div>
+          <label class="text-xs label-font mb-1 block opacity-80">Templates</label>
+          <select class="w-full bg-black/50 border border-[var(--color-primary)]/50 text-xs p-1 text-[var(--color-primary)]" onchange="loadTemplate(this.value)">
+            <option value="">-- Select Template --</option>
+            <option value="elements">Four Elements</option>
+            <option value="chakras">Chakra Map (7 Rings)</option>
+            <option value="zodiac">Zodiac Wheel (12 Signs)</option>
+          </select>
+        </div>
       </div>
-    </section>
+    </details>
 
-    <section>
-      <h2 class="label-font text-sm mb-4 text-yellow-600">Sacred Geometry</h2>
-      <div class="space-y-4">
-        <button
-          class="w-full py-2 px-4 border border-yellow-700/50 hover:bg-yellow-900/20 text-xs label-font transition-all text-gold"
-          onclick="addRing()">
+    <!-- Canvas Nav -->
+    <details class="group bg-black/30 rounded border border-[var(--color-primary)]/20" open>
+      <summary class="label-font text-sm p-3 cursor-pointer text-[var(--color-primary)] font-bold flex justify-between items-center">
+        Navigation
+        <span class="transform group-open:rotate-180 transition-transform">▼</span>
+      </summary>
+      <div class="p-3 pt-0">
+        <div class="grid grid-cols-3 gap-2 mb-2">
+          <button class="py-2 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font transition-all text-[var(--color-text)]" onclick="adjustZoom(0.1)">Zoom +</button>
+          <button class="py-2 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font transition-all text-[var(--color-text)]" onclick="adjustZoom(-0.1)">Zoom -</button>
+          <button class="py-2 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font transition-all text-[var(--color-text)]" onclick="resetView()">Reset</button>
+        </div>
+        <button class="w-full py-1 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font transition-all text-[var(--color-text)] mb-2" onclick="toggleFullscreen()">Toggle Fullscreen</button>
+        <!-- Minimap -->
+        <div class="mt-2 border border-[var(--color-primary)]/30 w-full h-32 relative bg-black/50" id="minimap-container">
+          <svg viewBox="0 0 800 800" class="w-full h-full opacity-50 pointer-events-none" id="minimap-svg"></svg>
+          <div id="minimap-viewport" class="absolute border border-[var(--color-primary)] pointer-events-none transition-all"></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Sacred Geometry -->
+    <details class="group bg-black/30 rounded border border-[var(--color-primary)]/20" open>
+      <summary class="label-font text-sm p-3 cursor-pointer text-[var(--color-primary)] font-bold flex justify-between items-center">
+        Sacred Geometry (<span id="segment-count">0</span>)
+        <span class="transform group-open:rotate-180 transition-transform">▼</span>
+      </summary>
+      <div class="p-3 pt-0 space-y-4">
+        <div class="flex items-center gap-2 text-xs label-font opacity-80 mb-2">
+          <input type="checkbox" id="spokes-toggle" onchange="renderMandala()" class="accent-[var(--color-primary)]">
+          <label for="spokes-toggle">Bindu Spokes</label>
+          <input type="checkbox" id="petals-toggle" onchange="renderMandala()" class="accent-[var(--color-primary)] ml-2">
+          <label for="petals-toggle">Petal Overlay</label>
+        </div>
+        <button class="w-full py-2 px-4 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-xs label-font transition-all text-[var(--color-primary)]" onclick="addRing()">
           Expand Sphere (+ Ring)
         </button>
-        <div class="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar" id="ring-controls-list">
+        <div class="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar" id="ring-controls-list" ondragover="allowDrop(event)" ondrop="dropRing(event)">
         </div>
       </div>
-    </section>
+    </details>
 
-    <section>
-      <h2 class="label-font text-sm mb-4 text-yellow-600">Reading Vectors</h2>
-      <div class="space-y-3 text-[10px] label-font uppercase tracking-widest">
-        <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('inward')">
-          <div class="w-3 h-3 border border-gold transition-colors" id="btn-inward"></div>
-          <span class="group-hover:text-gold transition-colors">Inward Path</span>
+    <!-- Reading Vectors -->
+    <details class="group bg-black/30 rounded border border-[var(--color-primary)]/20">
+      <summary class="label-font text-sm p-3 cursor-pointer text-[var(--color-primary)] font-bold flex justify-between items-center">
+        Reading Vectors
+        <span class="transform group-open:rotate-180 transition-transform">▼</span>
+      </summary>
+      <div class="p-3 pt-0">
+        <div class="space-y-3 text-[10px] label-font uppercase tracking-widest">
+          <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('inward')">
+            <div class="w-3 h-3 border border-[var(--color-primary)] transition-colors" id="btn-inward"></div>
+            <span class="group-hover:text-[var(--color-primary)] transition-colors">Inward Path</span>
+          </div>
+          <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('outward')">
+            <div class="w-3 h-3 border border-[var(--color-primary)] transition-colors" id="btn-outward"></div>
+            <span class="group-hover:text-[var(--color-primary)] transition-colors">Outward Path</span>
+          </div>
+          <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('clockwise')">
+            <div class="w-3 h-3 border border-[var(--color-primary)] transition-colors" id="btn-clockwise"></div>
+            <span class="group-hover:text-[var(--color-primary)] transition-colors">Clockwise</span>
+          </div>
+          <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('counter')">
+            <div class="w-3 h-3 border border-[var(--color-primary)] transition-colors" id="btn-counter"></div>
+            <span class="group-hover:text-[var(--color-primary)] transition-colors">Counter-Clock</span>
+          </div>
+          <div class="flex items-center gap-3 cursor-pointer group" onclick="togglePulse()">
+            <div class="w-3 h-3 border border-[var(--color-primary)] transition-colors" id="btn-pulse"></div>
+            <span class="group-hover:text-[var(--color-primary)] transition-colors">Pulse Mode</span>
+          </div>
         </div>
-        <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('outward')">
-          <div class="w-3 h-3 border border-gold transition-colors" id="btn-outward"></div>
-          <span class="group-hover:text-gold transition-colors">Outward Path</span>
-        </div>
-        <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('clockwise')">
-          <div class="w-3 h-3 border border-gold transition-colors" id="btn-clockwise"></div>
-          <span class="group-hover:text-gold transition-colors">Clockwise</span>
-        </div>
-        <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleFlow('counter')">
-          <div class="w-3 h-3 border border-gold transition-colors" id="btn-counter"></div>
-          <span class="group-hover:text-gold transition-colors">Counter-Clock</span>
+        <div>
+          <label class="text-[10px] label-font mt-3 mb-1 block opacity-80">Flow Speed</label>
+          <input type="range" id="flow-speed" min="0.5" max="5" step="0.1" value="1.5" class="w-full accent-[var(--color-primary)]" oninput="updateFlowSpeed(this.value)" style="direction: rtl;">
         </div>
       </div>
-      <p class="mt-4 text-[10px] italic opacity-50 font-sans leading-relaxed">
-        * Inward: Distillation to essence.<br />
-        * Outward: Manifestation into form.<br />
-        * Clockwise: The evolution of time.<br />
-        * Counter: Unraveling the past.
-      </p>
-    </section>
+    </details>
 
-    <section class="mt-8">
-      <h2 class="label-font text-sm mb-4 text-yellow-600">Archive & Export</h2>
-      <div class="grid grid-cols-1 gap-2">
-        <button class="w-full py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font text-gold"
-          onclick="exportToImage()">Save Complete Mandala (.png)</button>
+    <!-- Archive -->
+    <details class="group bg-black/30 rounded border border-[var(--color-primary)]/20" open>
+      <summary class="label-font text-sm p-3 cursor-pointer text-[var(--color-primary)] font-bold flex justify-between items-center">
+        Archive & Export
+        <span class="transform group-open:rotate-180 transition-transform">▼</span>
+      </summary>
+      <div class="p-3 pt-0 grid grid-cols-1 gap-2">
+        <div class="flex gap-2">
+          <button class="flex-1 py-1 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font text-[var(--color-primary)]" onclick="undo()" id="btn-undo" disabled>Undo (Ctrl+Z)</button>
+          <button class="flex-1 py-1 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font text-[var(--color-primary)]" onclick="redo()" id="btn-redo" disabled>Redo (Ctrl+Y)</button>
+        </div>
+        <button class="w-full py-2 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font text-[var(--color-primary)] font-bold" onclick="newMandala()">New Mandala</button>
+        <button class="w-full py-2 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font text-[var(--color-text)]" onclick="exportToImage()">Export PNG</button>
+        <button class="w-full py-2 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font text-[var(--color-text)]" onclick="exportToSVG()">Export SVG</button>
         <div class="grid grid-cols-2 gap-2">
-          <button class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font"
-            onclick="saveAsJSON()">Save JSON</button>
-          <label
-            class="py-2 border border-yellow-700/50 hover:bg-yellow-900/20 text-[10px] label-font text-center cursor-pointer">
-            Upload JSON<input class="hidden" onchange="uploadJSON(event)" type="file" />
+          <button class="py-2 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font" onclick="saveAsJSON()">Save JSON</button>
+          <label class="py-2 border border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/20 text-[10px] label-font text-center cursor-pointer">
+            Load JSON<input class="hidden" onchange="uploadJSON(event)" type="file" />
           </label>
         </div>
+        <button class="w-full py-1 border border-red-900/50 hover:bg-red-900/20 text-[10px] label-font text-red-500 mt-2" onclick="clearAll()">Clear All Rings</button>
       </div>
-    </section>
+    </details>
 
-    <footer class="mt-auto pt-6 text-[10px] text-center opacity-40 uppercase tracking-widest label-font">
+    <footer class="mt-auto pt-6 pb-2 text-[10px] text-center opacity-40 uppercase tracking-widest label-font">
       The Great Silence (Bindu) is Eternal
     </footer>
   </aside>
-  <main class="flex-1 relative flex items-center justify-center overflow-hidden">
-    <svg class="gold-glow" height="800" id="mandala-svg" viewBox="0 0 800 800" width="800">
+
+  <main class="flex-1 relative flex items-center justify-center overflow-hidden cursor-move" id="canvas-container"
+    onmousedown="startPan(event)" onmousemove="doPan(event)" onmouseup="endPan()" onmouseleave="endPan()"
+    ontouchstart="startTouchPan(event)" ontouchmove="doTouchPan(event)" ontouchend="endTouchPan()">
+    
+    <!-- SVG Canvas -->
+    <svg id="mandala-svg" width="100%" height="100%" viewBox="0 0 1000 1000" class="transition-transform duration-200">
       <defs>
-        <filter id="glow">
-          <feGaussianBlur result="coloredBlur" stdDeviation="2.5"></feGaussianBlur>
+        <filter id="bloom">
+          <feGaussianBlur result="blur1" stdDeviation="2"></feGaussianBlur>
+          <feGaussianBlur result="blur2" in="SourceGraphic" stdDeviation="6"></feGaussianBlur>
           <feMerge>
-            <feMergeNode in="coloredBlur"></feMergeNode>
+            <feMergeNode in="blur2"></feMergeNode>
+            <feMergeNode in="blur1"></feMergeNode>
             <feMergeNode in="SourceGraphic"></feMergeNode>
           </feMerge>
         </filter>
+        <radialGradient id="grad-trail" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="var(--color-primary)" stop-opacity="1"/>
+          <stop offset="100%" stop-color="var(--color-primary)" stop-opacity="0"/>
+        </radialGradient>
       </defs>
-      <g class="pointer-events-none" id="flow-indicators" transform="translate(400, 400)"></g>
-      <g id="mandala-content" transform="translate(400, 400)">
-        <g id="zoom-layer">
-          <g id="rings-layer"></g>
-          <circle class="bindu" cx="0" cy="0" r="30"></circle>
-          <text class="label-font text-[8px] fill-yellow-600/50 pointer-events-none uppercase" text-anchor="middle"
-            x="0" y="3">Bindu</text>
+      
+      <!-- Corner Ornaments -->
+      <g id="ornaments" stroke="var(--color-primary)" stroke-width="1.5" fill="none" opacity="0.3" class="pointer-events-none">
+        <path d="M 50 50 L 100 50 A 50 50 0 0 0 50 100 Z"/>
+        <path d="M 950 50 L 900 50 A 50 50 0 0 1 950 100 Z"/>
+        <path d="M 50 950 L 100 950 A 50 50 0 0 1 50 900 Z"/>
+        <path d="M 950 950 L 900 950 A 50 50 0 0 0 950 900 Z"/>
+      </g>
+
+      <g class="pointer-events-none" id="flow-indicators" transform="translate(500, 500)"></g>
+      
+      <g id="mandala-content" transform="translate(500, 500)">
+        <g id="pan-zoom-layer">
+          <g id="petals-layer" opacity="0.1"></g>
+          <g id="spokes-layer"></g>
+          <g id="rings-layer" filter="url(#bloom)"></g>
+          <!-- Bindu -->
+          <circle class="bindu bindu-pulse" cx="0" cy="0" r="30" fill="var(--color-bg-dark)" stroke="var(--color-primary)" stroke-width="2"></circle>
+          <text class="label-font text-[8px] pointer-events-none uppercase" fill="var(--color-primary)" text-anchor="middle" x="0" y="3">Bindu</text>
         </g>
       </g>
     </svg>
 
-    <div class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4" id="edit-overlay">
-      <div class="bg-charcoal border border-yellow-700 p-8 max-w-md w-full shadow-2xl">
-        <label class="block label-font text-sm mb-4 text-gold">Inscribe your thought:</label>
+    <!-- Editor Overlay (Frosted Glass) -->
+    <div class="fixed inset-0 glass-panel hidden z-50 flex flex-col items-center justify-center p-4 transition-opacity duration-300" id="edit-overlay">
+      <div class="bg-[var(--color-bg-dark)] border border-[var(--color-primary)] p-6 max-w-md w-full shadow-2xl relative rounded-md">
+        <button class="absolute top-2 right-4 text-[var(--color-primary)] hover:text-white" onclick="closeEditor()">✕</button>
+        <h3 class="label-font text-sm mb-4 text-[var(--color-primary)] flex justify-between">
+          <span>Inscribe Segment</span>
+          <span id="char-counter" class="text-xs opacity-50">0 chars | 0 words</span>
+        </h3>
+        
         <textarea
-          class="w-full bg-black border border-yellow-900/50 text-parchment p-4 focus:ring-1 focus:ring-gold focus:outline-none parchment-text text-xl"
-          id="section-input" rows="3"></textarea>
-        <div class="flex justify-end gap-4 mt-6">
-          <button class="label-font text-xs opacity-50 hover:opacity-100 uppercase"
-            onclick="closeEditor()">Discard</button>
-          <button class="label-font text-xs px-6 py-2 bg-yellow-900/30 border border-yellow-600 text-gold uppercase"
-            onclick="saveSectionText()">Inscribe</button>
+          class="w-full bg-black/50 border border-[var(--color-primary)]/50 text-[var(--color-text)] p-4 focus:ring-1 focus:ring-[var(--color-primary)] focus:outline-none parchment-text text-2xl rounded resize-none mb-4"
+          id="section-input" rows="4" oninput="updateCounter()"></textarea>
+          
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div>
+            <label class="text-[10px] label-font opacity-70 block mb-1">Color</label>
+            <input type="color" id="segment-color" class="w-full h-8 bg-black border border-[var(--color-primary)]/30 cursor-pointer">
+          </div>
+          <div>
+            <label class="text-[10px] label-font opacity-70 block mb-1">Size</label>
+            <select id="segment-size" class="w-full h-8 bg-black border border-[var(--color-primary)]/30 text-xs text-[var(--color-text)] px-1">
+              <option value="12px">Small</option>
+              <option value="16px">Medium</option>
+              <option value="20px">Large</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] label-font opacity-70 block mb-1">Align</label>
+            <select id="segment-align" class="w-full h-8 bg-black border border-[var(--color-primary)]/30 text-xs text-[var(--color-text)] px-1">
+              <option value="start">Start</option>
+              <option value="middle">Center</option>
+              <option value="end">End</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center">
+          <span class="text-[10px] opacity-50">Enter to save, Esc to discard</span>
+          <div class="flex gap-3">
+            <button class="label-font text-xs opacity-50 hover:opacity-100 uppercase transition-opacity" onclick="closeEditor()">Discard</button>
+            <button class="label-font text-xs px-6 py-2 bg-[var(--color-primary)]/20 border border-[var(--color-primary)] text-[var(--color-primary)] uppercase hover:bg-[var(--color-primary)]/40 transition-colors rounded" onclick="saveSectionText()">Inscribe</button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Welcome Modal -->
+    <div class="fixed inset-0 glass-panel hidden z-[100] flex items-center justify-center p-4" id="welcome-modal">
+      <div class="bg-[var(--color-bg-dark)] border border-[var(--color-primary)] p-8 max-w-lg text-center rounded shadow-2xl">
+        <h2 class="label-font text-2xl text-[var(--color-primary)] mb-4 shimmer-text font-bold">Welcome to Mandala Weaver</h2>
+        <p class="text-sm opacity-80 mb-6 leading-relaxed">
+          Craft radial geometries and inscribe ancient truths. Add concentric rings, style them, and breathe life into the vectors of thought.
+        </p>
+        <ul class="text-xs text-left opacity-70 mb-8 space-y-2 list-disc list-inside">
+          <li>Double-click any segment to edit its text.</li>
+          <li>Right-click segments for quick actions.</li>
+          <li>Drag and drop rings in the sidebar to reorder them.</li>
+          <li>Use pinch or mouse wheel to zoom, and drag the canvas to pan.</li>
+        </ul>
+        <button class="label-font text-sm px-8 py-3 bg-[var(--color-primary)]/20 border border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)]/40 transition-colors uppercase tracking-widest rounded" onclick="closeWelcome()">Enter the Sphere</button>
+      </div>
+    </div>
   </main>
-  <script data-purpose="mandala-engine">
+
+  <!-- Tooltip -->
+  <div id="tooltip" class="bg-black/90 border border-[var(--color-primary)] text-[var(--color-text)] text-xs p-2 rounded shadow-lg font-serif"></div>
+
+  <!-- Context Menu -->
+  <div id="context-menu" class="context-menu glass-panel border border-[var(--color-primary)] rounded shadow-xl text-xs label-font p-1">
+    <button class="w-full text-left px-4 py-2 hover:bg-[var(--color-primary)]/20 text-[var(--color-primary)]" onclick="ctxEdit()">Edit</button>
+    <button class="w-full text-left px-4 py-2 hover:bg-[var(--color-primary)]/20 text-[var(--color-primary)]" onclick="ctxClear()">Clear Text</button>
+    <button class="w-full text-left px-4 py-2 hover:bg-red-900/40 text-red-400" onclick="ctxDelete()">Delete Segment content</button>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast glass-panel border border-[var(--color-primary)] text-[var(--color-primary)] px-6 py-3 rounded shadow-lg label-font text-sm font-bold">
+    Message saved.
+  </div>
+
+  <script>
+    // --- State & Setup ---
     const svg = document.getElementById('mandala-svg');
+    const zoomLayer = document.getElementById('pan-zoom-layer');
     const ringsLayer = document.getElementById('rings-layer');
+    const spokesLayer = document.getElementById('spokes-layer');
+    const petalsLayer = document.getElementById('petals-layer');
     const ringControlsList = document.getElementById('ring-controls-list');
     const editOverlay = document.getElementById('edit-overlay');
     const sectionInput = document.getElementById('section-input');
-    const zoomLayer = document.getElementById('zoom-layer');
     const flowIndicators = document.getElementById('flow-indicators');
+    const minimapSvg = document.getElementById('minimap-svg');
+    const tooltip = document.getElementById('tooltip');
+    const ctxMenu = document.getElementById('context-menu');
+    const pCanvas = document.getElementById('particles-canvas');
 
+    // Default Segment Template
+    const defSegment = (text = "") => ({ text, color: "", fontSize: "16px", align: "middle" });
+
+    // Initial Data
     let mandalaData = [
-      { radius: 100, sections: 4, rotation: 0, texts: ["Spirit", "Air", "Earth", "Water", "Fire"] },
-      { radius: 180, sections: 8, rotation: 0, texts: Array(8).fill("Seek the truth within the ink") },
-      { radius: 280, sections: 12, rotation: 0, texts: Array(12).fill("Cycle of Time") }
+      { radius: 120, sections: 4, rotation: 0, style: 'solid', opacity: 100, texts: [defSegment("Spirit"), defSegment("Air"), defSegment("Earth"), defSegment("Water")] },
+      { radius: 220, sections: 8, rotation: 0, style: 'dashed', opacity: 80, texts: Array(8).fill(null).map(() => defSegment("Seek the truth")) },
+      { radius: 340, sections: 12, rotation: 0, style: 'solid', opacity: 60, texts: Array(12).fill(null).map(() => defSegment("Cycle of Time")) }
     ];
 
+    let undoStack = [];
+    let redoStack = [];
+    
     let currentZoom = 1;
-    let currentEditing = { ringIndex: -1, sectionIndex: -1 };
-    let flowState = { inward: false, outward: false, clockwise: false, counter: false };
+    let panX = 0;
+    let panY = 0;
+    let isPanning = false;
+    let startX = 0, startY = 0;
 
+    let currentEditing = { ringIndex: -1, sectionIndex: -1 };
+    let ctxTarget = null;
+
+    let flowState = { inward: false, outward: false, clockwise: false, counter: false, pulse: false };
+    
+    let draggedRingIndex = null;
+
+    // --- Initialization ---
+    function init() {
+      // Check local storage
+      const saved = localStorage.getItem('mandalaData');
+      if (saved) {
+        try { mandalaData = JSON.parse(saved); } catch(e){}
+      }
+      
+      const theme = localStorage.getItem('mandalaTheme');
+      if (theme) setTheme(theme);
+
+      if (!localStorage.getItem('mandalaWelcome')) {
+        document.getElementById('welcome-modal').classList.remove('hidden');
+      }
+
+      initParticles();
+      saveState(false);
+      renderMandala();
+
+      // Keyboard bindings
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !editOverlay.classList.contains('hidden')) closeEditor();
+        if (e.key === 'Enter' && e.ctrlKey && !editOverlay.classList.contains('hidden')) saveSectionText();
+        if (e.key === 'z' && e.ctrlKey) undo();
+        if (e.key === 'y' && e.ctrlKey) redo();
+      });
+
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.context-menu')) return;
+        ctxMenu.classList.remove('active');
+      });
+    }
+
+    // --- State Management (Undo/Redo/Save) ---
+    function saveState(pushToStack = true) {
+      const snap = JSON.stringify(mandalaData);
+      localStorage.setItem('mandalaData', snap);
+      if (pushToStack) {
+        undoStack.push(snap);
+        if (undoStack.length > 30) undoStack.shift();
+        redoStack = [];
+        updateUndoUI();
+      }
+    }
+
+    function updateUndoUI() {
+      document.getElementById('btn-undo').disabled = undoStack.length <= 1;
+      document.getElementById('btn-redo').disabled = redoStack.length === 0;
+    }
+
+    function undo() {
+      if (undoStack.length > 1) {
+        redoStack.push(undoStack.pop());
+        mandalaData = JSON.parse(undoStack[undoStack.length - 1]);
+        saveState(false);
+        renderMandala();
+        showToast("Undo");
+      }
+    }
+
+    function redo() {
+      if (redoStack.length > 0) {
+        const snap = redoStack.pop();
+        undoStack.push(snap);
+        mandalaData = JSON.parse(snap);
+        saveState(false);
+        renderMandala();
+        showToast("Redo");
+      }
+    }
+
+    // --- Math & Geometry ---
     function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
       const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
       return { x: centerX + (radius * Math.cos(angleInRadians)), y: centerY + (radius * Math.sin(angleInRadians)) };
     }
 
-    // FIXED: Draws arcs in a way that prevents text from flipping upside down on the bottom half
     function describeArc(x, y, radius, startAngle, endAngle) {
       const midAngle = (startAngle + endAngle) / 2;
-      // If the arc is largely on the bottom half of the circle, we reverse the draw direction
-      // so the text renders upright (left-to-right relative to the viewer).
       const flip = midAngle > 90 && midAngle < 270;
-
       if (!flip) {
         const start = polarToCartesian(x, y, radius, startAngle);
         const end = polarToCartesian(x, y, radius, endAngle);
@@ -302,78 +651,180 @@
         return ["M", start.x, start.y, "A", radius, radius, 0, 0, 0, end.x, end.y].join(" ");
       }
     }
+    
+    function getStrokeDashArray(style) {
+      switch(style) {
+        case 'dashed': return '10, 10';
+        case 'dotted': return '2, 8';
+        case 'double': return 'none'; // Implemented via duplicated circles usually, keeping simple here
+        default: return 'none';
+      }
+    }
 
+    // --- Rendering ---
     function renderMandala() {
       ringsLayer.innerHTML = '';
+      spokesLayer.innerHTML = '';
+      petalsLayer.innerHTML = '';
+      
+      let totalSegments = 0;
+      const drawSpokes = document.getElementById('spokes-toggle').checked;
+      const drawPetals = document.getElementById('petals-toggle').checked;
+
+      // Map copy for minimap
+      minimapSvg.innerHTML = '';
+      const mapDefs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+      minimapSvg.appendChild(mapDefs);
 
       mandalaData.forEach((ring, rIdx) => {
-        // Create animation wrapper for clockwise/counter-clockwise vectors
+        totalSegments += ring.sections;
+        
         const animGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        if (flowState.clockwise) animGroup.style.animation = `spin ${30 + (rIdx * 15)}s linear infinite`;
-        if (flowState.counter) animGroup.style.animation = `spin-reverse ${30 + (rIdx * 15)}s linear infinite`;
+        const speed = document.getElementById('global-speed').value;
+        const dur = (110 - speed) / 2;
+        if (flowState.clockwise) animGroup.style.animation = `spin ${dur + (rIdx * 5)}s linear infinite`;
+        if (flowState.counter) animGroup.style.animation = `spin-reverse ${dur + (rIdx * 5)}s linear infinite`;
 
         const ringGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
         ringGroup.setAttribute('transform', `rotate(${ring.rotation || 0})`);
-        const angleStep = 360 / ring.sections;
+        ringGroup.style.opacity = (ring.opacity !== undefined ? ring.opacity : 100) / 100;
 
-        // We add a tiny gap between segments for visual clarity
+        const angleStep = 360 / ring.sections;
         const padding = 1;
 
+        // Double style hack: draw an inner fainter ring
+        if (ring.style === 'double') {
+           const db = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+           db.setAttribute('r', ring.radius - 6);
+           db.setAttribute('cx', 0); db.setAttribute('cy', 0);
+           db.setAttribute('fill', 'none');
+           db.setAttribute('stroke', 'var(--color-primary)');
+           db.setAttribute('stroke-opacity', '0.3');
+           ringGroup.appendChild(db);
+        }
+
+        // Spokes
+        if (drawSpokes && rIdx === 0) {
+          for(let i=0; i<ring.sections; i++) {
+             const ang = i * angleStep;
+             const p = polarToCartesian(0, 0, ring.radius, ang);
+             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+             line.setAttribute('x1', 0); line.setAttribute('y1', 0);
+             line.setAttribute('x2', p.x); line.setAttribute('y2', p.y);
+             line.setAttribute('stroke', 'var(--color-primary)');
+             line.setAttribute('stroke-opacity', '0.2');
+             spokesLayer.appendChild(line);
+          }
+        }
+
         for (let i = 0; i < ring.sections; i++) {
+          const segData = ring.texts[i] || defSegment("");
           const startAngle = (i * angleStep) + padding;
           const endAngle = ((i + 1) * angleStep) - padding;
           const pathId = `path-${rIdx}-${i}`;
+          const mapPathId = `map-${pathId}`;
 
           const d = describeArc(0, 0, ring.radius, startAngle, endAngle);
 
+          // Interactive Group
           const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
           g.setAttribute('class', 'mandala-segment');
-          g.onclick = () => openEditor(rIdx, i);
+          g.setAttribute('tabindex', '0');
+          
+          // Interactions
+          g.ondblclick = () => openEditor(rIdx, i);
+          g.oncontextmenu = (e) => showContextMenu(e, rIdx, i);
+          g.onmouseenter = (e) => showTooltip(e, segData.text);
+          g.onmousemove = (e) => moveTooltip(e);
+          g.onmouseleave = hideTooltip;
 
+          // Keyboard nav edit
+          g.onkeydown = (e) => { if(e.key === 'Enter') openEditor(rIdx, i); };
+
+          // Path
           const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
           path.setAttribute('id', pathId);
           path.setAttribute('d', d);
-          path.setAttribute('class', 'segment-path fill-none stroke-yellow-900/30');
+          path.setAttribute('class', 'segment-path');
+          path.setAttribute('fill', 'none');
+          path.setAttribute('stroke', 'var(--color-primary)');
+          path.setAttribute('stroke-opacity', '0.3');
+          path.setAttribute('stroke-dasharray', getStrokeDashArray(ring.style));
+          if (ring.style === 'double') path.setAttribute('stroke-width', '2');
 
+          // Text
           const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
           text.setAttribute('class', 'segment-text');
+          text.setAttribute('fill', segData.color || 'var(--color-primary)');
+          text.setAttribute('font-size', segData.fontSize || '16px');
 
           const textPath = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
           textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `#${pathId}`);
-          textPath.setAttribute('startOffset', '50%');
-          textPath.setAttribute('text-anchor', 'middle');
-          // A slight baseline shift helps position text perfectly on the line
+          
+          // Alignment
+          let startOffset = '50%';
+          if (segData.align === 'start') startOffset = '5%';
+          if (segData.align === 'end') startOffset = '95%';
+          textPath.setAttribute('startOffset', startOffset);
+          textPath.setAttribute('text-anchor', segData.align || 'middle');
           textPath.setAttribute('dominant-baseline', 'middle');
-          textPath.textContent = ring.texts[i] || "";
+          textPath.textContent = segData.text;
 
           text.appendChild(textPath);
           g.appendChild(path);
           g.appendChild(text);
           ringGroup.appendChild(g);
+
+          // Minimap element
+          const mapG = g.cloneNode(true);
+          mapG.removeAttribute('class');
+          mapG.removeAttribute('tabindex');
+          mapG.querySelector('path').setAttribute('id', mapPathId);
+          mapG.querySelector('textPath').setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `#${mapPathId}`);
+          const mapGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          mapGroup.setAttribute('transform', `rotate(${ring.rotation || 0}) translate(400, 400)`);
+          mapGroup.appendChild(mapG);
+          minimapSvg.appendChild(mapGroup);
+          
+          // Petals (draw arc to center of next segment)
+          if (drawPetals && rIdx < mandalaData.length - 1) {
+             const nextRing = mandalaData[rIdx + 1];
+             const midA = (startAngle + endAngle) / 2;
+             const p1 = polarToCartesian(0, 0, ring.radius, midA);
+             const p2 = polarToCartesian(0, 0, nextRing.radius, midA + (360/nextRing.sections/2));
+             const pPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+             pPath.setAttribute('d', `M ${p1.x} ${p1.y} Q 0 0 ${p2.x} ${p2.y}`);
+             pPath.setAttribute('fill', 'none');
+             pPath.setAttribute('stroke', 'var(--color-primary)');
+             petalsLayer.appendChild(pPath);
+          }
         }
 
         animGroup.appendChild(ringGroup);
         ringsLayer.appendChild(animGroup);
       });
 
+      document.getElementById('segment-count').innerText = totalSegments;
       renderFlowIndicators();
       renderControls();
+      updateMinimapViewport();
     }
 
     function renderFlowIndicators() {
       flowIndicators.innerHTML = '';
-
       if (flowState.inward || flowState.outward) {
-        const maxR = mandalaData.length > 0 ? mandalaData[mandalaData.length - 1].radius + 40 : 300;
+        const maxR = mandalaData.length > 0 ? mandalaData[mandalaData.length - 1].radius + 80 : 400;
         for (let i = 0; i < 12; i++) {
           const angle = i * 30;
           const end = polarToCartesian(0, 0, maxR, angle);
+          const startOffset = polarToCartesian(0, 0, 50, angle);
+          
           const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-          // Start slightly away from the center to respect the Bindu
-          const startOffset = polarToCartesian(0, 0, 40, angle);
           line.setAttribute("x1", startOffset.x); line.setAttribute("y1", startOffset.y);
           line.setAttribute("x2", end.x); line.setAttribute("y2", end.y);
-          line.setAttribute("class", "reading-indicator");
+          line.setAttribute("class", "reading-indicator stroke-[var(--color-primary)]");
+          // Gradient trail style for vector lines
+          line.setAttribute("stroke", "url(#grad-trail)");
           flowIndicators.appendChild(line);
         }
         svg.classList.toggle('flow-inward', flowState.inward);
@@ -381,24 +832,53 @@
       } else {
         svg.classList.remove('flow-inward', 'flow-outward');
       }
+
+      const svgEl = document.getElementById('mandala-content');
+      if (flowState.pulse) svgEl.classList.add('pulse-mode');
+      else svgEl.classList.remove('pulse-mode');
     }
 
+    // --- Controls & Sidebar UI ---
     function renderControls() {
       ringControlsList.innerHTML = '';
       mandalaData.forEach((ring, idx) => {
         const div = document.createElement('div');
-        div.className = 'flex flex-col gap-1 p-2 bg-yellow-900/10 border border-yellow-900/30 text-[10px]';
+        div.className = 'flex flex-col gap-2 p-2 bg-black/40 border border-[var(--color-primary)]/30 rounded cursor-grab';
+        div.draggable = true;
+        div.ondragstart = (e) => dragStart(e, idx);
         div.innerHTML = `
-        <div class="flex justify-between items-center mb-1">
-          <span class="label-font text-yellow-500">Ring ${idx + 1}</span>
-          <button class="text-red-900 hover:text-red-600 font-bold" onclick="removeRing(${idx})">✕</button>
+        <div class="flex justify-between items-center border-b border-[var(--color-primary)]/20 pb-1">
+          <span class="label-font text-[var(--color-primary)] text-xs font-bold">Ring ${idx + 1}</span>
+          <div class="flex gap-2">
+            <button class="text-white opacity-50 hover:opacity-100" title="Move Up" onclick="moveRing(${idx}, -1)" ${idx===0?'disabled':''}>↑</button>
+            <button class="text-white opacity-50 hover:opacity-100" title="Move Down" onclick="moveRing(${idx}, 1)" ${idx===mandalaData.length-1?'disabled':''}>↓</button>
+            <button class="text-red-400 hover:text-red-500 font-bold ml-2" title="Delete" onclick="removeRing(${idx})">✕</button>
+          </div>
         </div>
-        <div class="flex items-center justify-between gap-2">
-          <span>Sections:</span>
-          <input class="bg-black border border-yellow-900/50 w-12 text-center p-1 text-gold" onchange="updateSections(${idx}, this.value)" type="number" value="${ring.sections}"/>
-          <span class="ml-2">Rotation:</span>
-          <button class="text-gold border border-yellow-900/50 px-2 hover:bg-yellow-900/30" onclick="rotateRing(${idx}, -15)">↺</button>
-          <button class="text-gold border border-yellow-900/50 px-2 hover:bg-yellow-900/30" onclick="rotateRing(${idx}, 15)">↻</button>
+        <div class="grid grid-cols-2 gap-2 items-center text-[10px]">
+          <label class="opacity-80">Sections</label>
+          <input class="bg-black/50 border border-[var(--color-primary)]/50 p-1 text-[var(--color-primary)] text-center rounded" onchange="updateRingProp(${idx}, 'sections', this.value)" type="number" min="1" max="72" value="${ring.sections}"/>
+          
+          <label class="opacity-80">Radius</label>
+          <input class="bg-black/50 border border-[var(--color-primary)]/50 p-1 text-[var(--color-primary)] text-center rounded" type="range" min="50" max="600" value="${ring.radius}" oninput="updateRingProp(${idx}, 'radius', this.value)"/>
+          
+          <label class="opacity-80">Style</label>
+          <select class="bg-black/50 border border-[var(--color-primary)]/50 p-1 text-[var(--color-primary)] rounded" onchange="updateRingProp(${idx}, 'style', this.value)">
+            <option value="solid" ${ring.style==='solid'?'selected':''}>Solid</option>
+            <option value="dashed" ${ring.style==='dashed'?'selected':''}>Dashed</option>
+            <option value="dotted" ${ring.style==='dotted'?'selected':''}>Dotted</option>
+            <option value="double" ${ring.style==='double'?'selected':''}>Double</option>
+          </select>
+          
+          <label class="opacity-80">Opacity</label>
+          <input class="bg-black/50 border border-[var(--color-primary)]/50 p-1 text-[var(--color-primary)] text-center rounded" type="range" min="10" max="100" value="${ring.opacity !== undefined ? ring.opacity : 100}" oninput="updateRingProp(${idx}, 'opacity', this.value)"/>
+        </div>
+        <div class="flex justify-between items-center text-[10px] mt-1 pt-1 border-t border-[var(--color-primary)]/20">
+          <span class="opacity-80">Rotation</span>
+          <div class="flex gap-1">
+            <button class="text-[var(--color-primary)] border border-[var(--color-primary)]/50 px-2 rounded hover:bg-[var(--color-primary)]/30" onclick="rotateRing(${idx}, -5)">↺ 5°</button>
+            <button class="text-[var(--color-primary)] border border-[var(--color-primary)]/50 px-2 rounded hover:bg-[var(--color-primary)]/30" onclick="rotateRing(${idx}, 5)">↻ 5°</button>
+          </div>
         </div>
       `;
         ringControlsList.appendChild(div);
@@ -406,65 +886,98 @@
     }
 
     function addRing() {
-      const lastRadius = mandalaData.length > 0 ? mandalaData[mandalaData.length - 1].radius : 60;
-      mandalaData.push({ radius: lastRadius + 80, sections: 8, rotation: 0, texts: Array(8).fill("New Path...") });
+      const last = mandalaData[mandalaData.length - 1];
+      const radius = last ? last.radius + 80 : 100;
+      const sections = last ? last.sections : 8;
+      mandalaData.push({ 
+        radius, sections, rotation: 0, style: 'solid', opacity: 100,
+        texts: Array(sections).fill(null).map(() => defSegment("New Light"))
+      });
+      saveState();
       renderMandala();
+      // Animation hint
+      svg.style.transform = "scale(0.95)";
+      setTimeout(() => svg.style.transform = "scale(1)", 150);
     }
 
     function removeRing(idx) {
-      mandalaData.splice(idx, 1);
+      if(confirm(`Remove Ring ${idx + 1}?`)) {
+        mandalaData.splice(idx, 1);
+        saveState();
+        renderMandala();
+      }
+    }
+
+    function clearAll() {
+      if(confirm("Are you sure you want to clear all rings? This cannot be undone easily.")) {
+        mandalaData = [];
+        saveState();
+        renderMandala();
+      }
+    }
+
+    function moveRing(idx, dir) {
+      if(idx + dir < 0 || idx + dir >= mandalaData.length) return;
+      const temp = mandalaData[idx];
+      mandalaData[idx] = mandalaData[idx + dir];
+      mandalaData[idx + dir] = temp;
+      saveState();
       renderMandala();
     }
 
-    function updateSections(idx, val) {
-      const num = parseInt(val);
-      if (num < 1) return;
-      mandalaData[idx].sections = num;
-
-      // Ensure array length matches section count
-      while (mandalaData[idx].texts.length < num) mandalaData[idx].texts.push("Empty");
-      mandalaData[idx].texts = mandalaData[idx].texts.slice(0, num);
-
+    function updateRingProp(idx, prop, val) {
+      if (prop === 'sections') {
+        const num = parseInt(val);
+        if (num < 1) return;
+        mandalaData[idx].sections = num;
+        // Expand/shrink texts array
+        while (mandalaData[idx].texts.length < num) mandalaData[idx].texts.push(defSegment(""));
+        mandalaData[idx].texts = mandalaData[idx].texts.slice(0, num);
+      } else if (prop === 'radius' || prop === 'opacity') {
+        mandalaData[idx][prop] = parseInt(val);
+      } else {
+        mandalaData[idx][prop] = val;
+      }
+      saveState(prop === 'sections'); // Only push history for destructive text edits
       renderMandala();
     }
 
     function rotateRing(idx, deg) {
       mandalaData[idx].rotation = (mandalaData[idx].rotation || 0) + deg;
+      saveState(false);
       renderMandala();
     }
 
-    function adjustZoom(delta) {
-      currentZoom = Math.max(0.3, Math.min(3, currentZoom + delta));
-      zoomLayer.setAttribute('transform', `scale(${currentZoom})`);
-    }
-
-    function resetZoom() {
-      currentZoom = 1;
-      zoomLayer.setAttribute('transform', 'scale(1)');
-    }
-
-    svg.onwheel = (e) => {
+    // Drag Drop Rings
+    function dragStart(e, idx) { draggedRingIndex = idx; }
+    function allowDrop(e) { e.preventDefault(); }
+    function dropRing(e) {
       e.preventDefault();
-      adjustZoom(e.deltaY > 0 ? -0.05 : 0.05);
-    };
-
-    function toggleFlow(type) {
-      // Handle mutual exclusivity for logical flow
-      if (type === 'clockwise' && flowState.counter) toggleFlow('counter');
-      if (type === 'counter' && flowState.clockwise) toggleFlow('clockwise');
-      if (type === 'inward' && flowState.outward) toggleFlow('outward');
-      if (type === 'outward' && flowState.inward) toggleFlow('inward');
-
-      flowState[type] = !flowState[type];
-      document.getElementById(`btn-${type}`).classList.toggle('bg-gold', flowState[type]);
-      renderMandala();
+      const targetDiv = e.target.closest('div[draggable="true"]');
+      if (!targetDiv) return;
+      const nodes = Array.from(ringControlsList.children);
+      const targetIdx = nodes.indexOf(targetDiv);
+      if (draggedRingIndex !== null && targetIdx !== -1 && draggedRingIndex !== targetIdx) {
+        const item = mandalaData.splice(draggedRingIndex, 1)[0];
+        mandalaData.splice(targetIdx, 0, item);
+        saveState();
+        renderMandala();
+      }
     }
 
+    // --- Editor Overlay ---
     function openEditor(rIdx, sIdx) {
       currentEditing = { ringIndex: rIdx, sectionIndex: sIdx };
-      sectionInput.value = mandalaData[rIdx].texts[sIdx];
+      const seg = mandalaData[rIdx].texts[sIdx] || defSegment("");
+      
+      sectionInput.value = seg.text || "";
+      document.getElementById('segment-color').value = seg.color || getComputedStyle(document.body).getPropertyValue('--color-primary').trim();
+      document.getElementById('segment-size').value = seg.fontSize || "16px";
+      document.getElementById('segment-align').value = seg.align || "middle";
+      
+      updateCounter();
       editOverlay.classList.remove('hidden');
-      sectionInput.focus();
+      setTimeout(() => sectionInput.focus(), 50);
     }
 
     function closeEditor() {
@@ -472,50 +985,506 @@
     }
 
     function saveSectionText() {
-      mandalaData[currentEditing.ringIndex].texts[currentEditing.sectionIndex] = sectionInput.value;
+      const { ringIndex: r, sectionIndex: s } = currentEditing;
+      const isSymmetry = document.getElementById('symmetry-toggle').checked;
+      const ring = mandalaData[r];
+      
+      const newSeg = {
+        text: sectionInput.value,
+        color: document.getElementById('segment-color').value,
+        fontSize: document.getElementById('segment-size').value,
+        align: document.getElementById('segment-align').value
+      };
+
+      ring.texts[s] = { ...newSeg };
+      
+      if (isSymmetry) {
+        const opp = (s + Math.floor(ring.sections / 2)) % ring.sections;
+        if (opp !== s) ring.texts[opp] = { ...newSeg };
+      }
+
+      saveState();
       closeEditor();
+      renderMandala();
+      showToast("Inscribed successfully");
+    }
+
+    function updateCounter() {
+      const text = sectionInput.value;
+      const chars = text.length;
+      const words = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+      document.getElementById('char-counter').innerText = `${chars} chars | ${words} words`;
+    }
+
+    // --- Context Menu ---
+    function showContextMenu(e, rIdx, sIdx) {
+      e.preventDefault();
+      ctxTarget = { rIdx, sIdx };
+      ctxMenu.style.left = e.pageX + 'px';
+      ctxMenu.style.top = e.pageY + 'px';
+      ctxMenu.classList.add('active');
+    }
+    
+    function ctxEdit() { if(ctxTarget) openEditor(ctxTarget.rIdx, ctxTarget.sIdx); ctxMenu.classList.remove('active'); }
+    function ctxClear() {
+      if(ctxTarget) {
+        mandalaData[ctxTarget.rIdx].texts[ctxTarget.sIdx].text = "";
+        saveState(); renderMandala();
+      }
+      ctxMenu.classList.remove('active');
+    }
+    function ctxDelete() { ctxClear(); }
+
+    // --- Viewport & Navigation ---
+    function applyTransform() {
+      zoomLayer.setAttribute('transform', `translate(${panX}, ${panY}) scale(${currentZoom})`);
+      updateMinimapViewport();
+    }
+    
+    function adjustZoom(delta) {
+      currentZoom = Math.max(0.2, Math.min(4, currentZoom + delta));
+      applyTransform();
+    }
+
+    function resetView() {
+      currentZoom = 1; panX = 0; panY = 0;
+      applyTransform();
+    }
+
+    svg.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomSensitivity = 0.001;
+      adjustZoom(e.deltaY * -zoomSensitivity * (currentZoom * 2));
+    }, { passive: false });
+
+    function startPan(e) { if(e.button !== 0) return; isPanning = true; startX = e.clientX - panX; startY = e.clientY - panY; }
+    function doPan(e) { if(!isPanning) return; panX = e.clientX - startX; panY = e.clientY - startY; applyTransform(); }
+    function endPan() { isPanning = false; }
+    
+    // Touch Pan
+    function startTouchPan(e) {
+       if(e.touches.length === 1) {
+           isPanning = true;
+           startX = e.touches[0].clientX - panX;
+           startY = e.touches[0].clientY - panY;
+       }
+    }
+    function doTouchPan(e) {
+       if(!isPanning || e.touches.length !== 1) return;
+       e.preventDefault();
+       panX = e.touches[0].clientX - startX;
+       panY = e.touches[0].clientY - startY;
+       applyTransform();
+    }
+    function endTouchPan() { isPanning = false; }
+
+    function updateMinimapViewport() {
+      const vp = document.getElementById('minimap-viewport');
+      const w = 100 / currentZoom;
+      const h = 100 / currentZoom;
+      const x = 50 - (w/2) - (panX / 10 / currentZoom);
+      const y = 50 - (h/2) - (panY / 10 / currentZoom);
+      vp.style.width = `${w}%`;
+      vp.style.height = `${h}%`;
+      vp.style.left = `${x}%`;
+      vp.style.top = `${y}%`;
+    }
+
+    // --- Tools & Effects ---
+    function toggleFlow(type) {
+      if (type === 'clockwise' && flowState.counter) toggleFlow('counter');
+      if (type === 'counter' && flowState.clockwise) toggleFlow('clockwise');
+      if (type === 'inward' && flowState.outward) toggleFlow('outward');
+      if (type === 'outward' && flowState.inward) toggleFlow('inward');
+
+      flowState[type] = !flowState[type];
+      document.getElementById(`btn-${type}`).classList.toggle('bg-[var(--color-primary)]', flowState[type]);
       renderMandala();
     }
 
+    function togglePulse() {
+      flowState.pulse = !flowState.pulse;
+      document.getElementById('btn-pulse').classList.toggle('bg-[var(--color-primary)]', flowState.pulse);
+      renderFlowIndicators();
+    }
+
+    function updateSpeed(val) { renderMandala(); } // re-triggers animation duration
+    function updateFlowSpeed(val) { document.documentElement.style.setProperty('--flow-speed', `${val}s`); }
+
+    function toggleBreathing(on) {
+      const mainLayer = document.getElementById('mandala-content');
+      if(on) mainLayer.classList.add('breathing-mandala');
+      else mainLayer.classList.remove('breathing-mandala');
+    }
+
+    function setTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('mandalaTheme', theme);
+      renderMandala(); // Redraw with new colors if they use variables (which they do)
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else if (document.exitFullscreen) document.exitFullscreen();
+    }
+    
+    function closeWelcome() {
+      document.getElementById('welcome-modal').classList.add('hidden');
+      localStorage.setItem('mandalaWelcome', 'true');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Tooltip
+    function showTooltip(e, text) {
+      if (!text) return;
+      tooltip.innerText = text;
+      tooltip.style.opacity = 1;
+      moveTooltip(e);
+    }
+    function moveTooltip(e) {
+      tooltip.style.left = (e.pageX + 15) + 'px';
+      tooltip.style.top = (e.pageY + 15) + 'px';
+    }
+    function hideTooltip() { tooltip.style.opacity = 0; }
+
+    // --- Templates ---
+    function loadTemplate(id) {
+      if(!id) return;
+      if(!confirm("Loading a template will overwrite your current mandala. Proceed?")) {
+        document.querySelector('select').value = "";
+        return;
+      }
+      
+      if(id === 'elements') {
+        mandalaData = [{ radius: 150, sections: 4, style: 'solid', texts: ["Fire", "Water", "Air", "Earth"].map(t=>defSegment(t))}];
+      } else if (id === 'chakras') {
+        const names = ["Root", "Sacral", "Solar Plexus", "Heart", "Throat", "Third Eye", "Crown"];
+        const colors = ["#ff4040", "#ff7f00", "#ffd700", "#00ff00", "#00bfff", "#4b0082", "#9400d3"];
+        mandalaData = names.map((n, i) => ({
+          radius: 100 + (i * 60), sections: (i+1)*2 + 2, style: 'solid', opacity: 80,
+          texts: Array((i+1)*2 + 2).fill(null).map(()=>({text: n, color: colors[i], fontSize: "14px", align: "middle"}))
+        }));
+      } else if (id === 'zodiac') {
+        const signs = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+        mandalaData = [
+          { radius: 120, sections: 4, style: 'dashed', texts: ["Fire","Earth","Air","Water"].map(t=>defSegment(t)) },
+          { radius: 250, sections: 12, style: 'solid', texts: signs.map(t=>defSegment(t)) }
+        ];
+      }
+      document.querySelector('select').value = "";
+      saveState();
+      renderMandala();
+      resetView();
+      showToast("Template loaded");
+    }
+
+    // --- IO / Export ---
     function saveAsJSON() {
-      const blob = new Blob([JSON.stringify(mandalaData)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
+      const blob = new Blob([JSON.stringify(mandalaData, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
-      a.href = url;
-      a.download = 'mandala_config.json';
+      a.href = URL.createObjectURL(blob);
+      a.download = `mandala_${Date.now()}.json`;
       a.click();
+      showToast("JSON saved");
     }
 
     function uploadJSON(e) {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        mandalaData = JSON.parse(ev.target.result);
-        renderMandala();
+        try {
+          mandalaData = JSON.parse(ev.target.result);
+          saveState();
+          renderMandala();
+          showToast("Mandala loaded");
+        } catch(err) { alert("Invalid file format"); }
       };
-      reader.readAsText(e.target.files[0]);
+      if(e.target.files[0]) reader.readAsText(e.target.files[0]);
+    }
+    
+    function newMandala() {
+      if(confirm("Create blank mandala?")) {
+        mandalaData = [{ radius: 150, sections: 4, style: 'solid', texts: Array(4).fill(null).map(()=>defSegment("")) }];
+        saveState(); renderMandala(); resetView();
+      }
+    }
+
+    function exportToSVG() {
+      // Build a self-contained SVG with resolved colors (reuses same logic as PNG prep)
+      const cs = getComputedStyle(document.documentElement);
+      const vars = {
+        '--color-primary':     cs.getPropertyValue('--color-primary').trim()    || '#d4af37',
+        '--color-primary-rgb': cs.getPropertyValue('--color-primary-rgb').trim()|| '212, 175, 55',
+        '--color-bg-dark':     cs.getPropertyValue('--color-bg-dark').trim()    || '#0b0b0b',
+        '--color-bg-light':    cs.getPropertyValue('--color-bg-light').trim()   || '#1a1a1a',
+        '--color-text':        cs.getPropertyValue('--color-text').trim()       || '#f4e4bc',
+        '--color-accent':      cs.getPropertyValue('--color-accent').trim()     || '#8b6b23',
+      };
+      function resolveV(val) {
+        if (!val || typeof val !== 'string') return val;
+        return val.replace(/var\((--color-[a-z-]+)\)/g, (_, name) => vars[name] || '');
+      }
+      const clone = svg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+      clone.setAttribute('width', '1000');
+      clone.setAttribute('height', '1000');
+      clone.removeAttribute('class');
+      const pz = clone.querySelector('#pan-zoom-layer');
+      if (pz) pz.removeAttribute('transform');
+      // Resolve vars
+      clone.querySelectorAll('*').forEach(el => {
+        ['fill','stroke','color','stop-color'].forEach(a => {
+          const v = el.getAttribute(a);
+          if (v && v.includes('var(')) el.setAttribute(a, resolveV(v));
+        });
+      });
+      // Background
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bg.setAttribute('width','1000'); bg.setAttribute('height','1000');
+      bg.setAttribute('fill', vars['--color-bg-dark']);
+      clone.insertBefore(bg, clone.firstChild);
+      // Fonts
+      const fs = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+      fs.textContent = `@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');`;
+      clone.insertBefore(fs, bg.nextSibling);
+
+      const svgData = new XMLSerializer().serializeToString(clone);
+      const blob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `mandala_${Date.now()}.svg`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 100);
+      showToast("SVG exported ✓");
     }
 
     function exportToImage() {
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const canvas = document.createElement("canvas");
-      canvas.width = 800; canvas.height = 800;
-      const ctx = canvas.getContext("2d");
+      showToast("Preparing export...");
+
+      // --- 1. Resolve current theme colors ---
+      const cs = getComputedStyle(document.documentElement);
+      const colorPrimary   = cs.getPropertyValue('--color-primary').trim()   || '#d4af37';
+      const colorPrimaryRgb= cs.getPropertyValue('--color-primary-rgb').trim()|| '212, 175, 55';
+      const colorBgDark    = cs.getPropertyValue('--color-bg-dark').trim()   || '#0b0b0b';
+      const colorBgLight   = cs.getPropertyValue('--color-bg-light').trim()  || '#1a1a1a';
+      const colorText      = cs.getPropertyValue('--color-text').trim()      || '#f4e4bc';
+      const colorAccent    = cs.getPropertyValue('--color-accent').trim()    || '#8b6b23';
+
+      // --- 2. Deep-clone the live SVG ---
+      const clone = svg.cloneNode(true);
+
+      // --- 3. Set explicit dimensions (required for Image() to know intrinsic size) ---
+      clone.setAttribute('width', '2000');
+      clone.setAttribute('height', '2000');
+      clone.setAttribute('viewBox', '0 0 1000 1000');
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+      clone.removeAttribute('class');
+      clone.removeAttribute('style');
+
+      // --- 4. Reset pan/zoom so we export the full centered mandala ---
+      const pzLayer = clone.querySelector('#pan-zoom-layer');
+      if (pzLayer) pzLayer.removeAttribute('transform');
+
+      // --- 5. Remove interactive/animation attributes that don't belong in a static export ---
+      clone.querySelectorAll('[tabindex]').forEach(el => el.removeAttribute('tabindex'));
+      clone.querySelectorAll('[class*="pulse"], [class*="breathing"]').forEach(el => {
+        el.classList.remove('bindu-pulse', 'breathing-mandala', 'pulse-mode');
+      });
+      // Freeze spinning rings: remove animation styles
+      clone.querySelectorAll('g').forEach(g => {
+        if (g.style && g.style.animation) g.style.animation = '';
+      });
+
+      // --- 6. Resolve ALL CSS custom properties throughout the SVG tree ---
+      function resolveVar(val) {
+        if (!val || typeof val !== 'string') return val;
+        return val
+          .replace(/var\(--color-primary-rgb\)/g, colorPrimaryRgb)
+          .replace(/var\(--color-primary\)/g, colorPrimary)
+          .replace(/var\(--color-bg-dark\)/g, colorBgDark)
+          .replace(/var\(--color-bg-light\)/g, colorBgLight)
+          .replace(/var\(--color-text\)/g, colorText)
+          .replace(/var\(--color-accent\)/g, colorAccent);
+      }
+
+      const cssAttrs = ['fill', 'stroke', 'color', 'stop-color', 'flood-color', 'lighting-color'];
+      clone.querySelectorAll('*').forEach(el => {
+        cssAttrs.forEach(attr => {
+          const v = el.getAttribute(attr);
+          if (v && v.includes('var(')) el.setAttribute(attr, resolveVar(v));
+        });
+        // Also resolve inline style properties
+        if (el.style) {
+          for (let i = 0; i < el.style.length; i++) {
+            const prop = el.style[i];
+            const val = el.style.getPropertyValue(prop);
+            if (val && val.includes('var(')) {
+              el.style.setProperty(prop, resolveVar(val));
+            }
+          }
+        }
+      });
+
+      // Resolve gradient stops
+      clone.querySelectorAll('stop').forEach(stop => {
+        const sc = stop.getAttribute('stop-color');
+        if (sc && sc.includes('var(')) stop.setAttribute('stop-color', resolveVar(sc));
+      });
+
+      // --- 7. Resolve Tailwind/class-based styles by inlining computed values on key elements ---
+      // Bindu text: the clone lost Tailwind's text-[8px] and label-font
+      clone.querySelectorAll('text').forEach(textEl => {
+        const cls = textEl.getAttribute('class') || '';
+        if (cls.includes('label-font') || cls.includes('text-[8px]')) {
+          textEl.style.fontFamily = "'Cinzel', serif";
+          textEl.style.fontSize = '8px';
+          textEl.style.textTransform = 'uppercase';
+        }
+        // Segment text class
+        if (cls.includes('segment-text')) {
+          textEl.style.fontFamily = "'Great Vibes', cursive";
+          textEl.style.pointerEvents = 'none';
+        }
+        // Resolve fill if still using var
+        const fill = textEl.getAttribute('fill');
+        if (fill && fill.includes('var(')) textEl.setAttribute('fill', resolveVar(fill));
+      });
+
+      // --- 8. Embed fonts as @font-face inside the SVG ---
+      // We use Google Fonts CSS URL that returns woff2 references, but for a standalone SVG
+      // rendered as an Image, external @import won't load. Instead we embed the font-face
+      // declarations pointing to the Google Fonts CDN (works for same-origin data URIs
+      // in most browsers). As a robust fallback we also set generic families.
+      const fontStyle = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+      fontStyle.textContent = `
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+        text { font-family: 'Great Vibes', 'Brush Script MT', cursive; }
+      `;
+      // Prepend into <defs> or as first child
+      const defs = clone.querySelector('defs');
+      if (defs) defs.insertBefore(fontStyle, defs.firstChild);
+      else clone.insertBefore(fontStyle, clone.firstChild);
+
+      // --- 9. Add a background rect inside the SVG for the dark theme background ---
+      const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bgRect.setAttribute('width', '1000');
+      bgRect.setAttribute('height', '1000');
+      bgRect.setAttribute('fill', colorBgDark);
+      clone.insertBefore(bgRect, clone.firstChild);
+
+      // Re-add the font style after bgRect so it stays in the DOM
+      if (!clone.querySelector('style')) {
+        clone.insertBefore(fontStyle, bgRect.nextSibling);
+      }
+
+      // --- 10. Serialize and render to canvas ---
+      const serializer = new XMLSerializer();
+      let svgString = serializer.serializeToString(clone);
+
+      // Safety: ensure xmlns is present (some serializers drop it)
+      if (!svgString.includes('xmlns="http://www.w3.org/2000/svg"')) {
+        svgString = svgString.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+      }
+
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+
       const img = new Image();
       img.onload = () => {
-        ctx.fillStyle = '#0b0b0b';
-        ctx.fillRect(0, 0, 800, 800);
-        ctx.drawImage(img, 0, 0);
-        const link = document.createElement('a');
-        link.download = 'mandala.png';
-        link.href = canvas.toDataURL();
-        link.click();
+        const canvas = document.createElement('canvas');
+        canvas.width = 2000;
+        canvas.height = 2000;
+        const ctx = canvas.getContext('2d');
+
+        // Draw the SVG (which already has its own background rect)
+        ctx.drawImage(img, 0, 0, 2000, 2000);
+
+        URL.revokeObjectURL(url);
+
+        // Convert to blob for a clean download
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            showToast("Export failed — try again");
+            return;
+          }
+          const dlUrl = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.download = `mandala_${Date.now()}.png`;
+          link.href = dlUrl;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setTimeout(() => URL.revokeObjectURL(dlUrl), 100);
+          showToast("PNG exported ✓");
+        }, 'image/png');
       };
-      img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+
+      img.onerror = (err) => {
+        console.error('PNG export failed:', err);
+        URL.revokeObjectURL(url);
+        showToast("Export failed — check console");
+      };
+
+      img.src = url;
     }
 
-    // Initial Render
-    renderMandala();
+    // --- Particles Background ---
+    function initParticles() {
+      const ctx = pCanvas.getContext('2d');
+      let particles = [];
+      
+      function resize() {
+        pCanvas.width = window.innerWidth;
+        pCanvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      for(let i=0; i<50; i++) {
+        particles.push({
+          x: Math.random() * pCanvas.width,
+          y: Math.random() * pCanvas.height,
+          r: Math.random() * 2 + 0.5,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          alpha: Math.random() * 0.5 + 0.1
+        });
+      }
+
+      function drawParticles() {
+        ctx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+        const color = getComputedStyle(document.body).getPropertyValue('--color-primary-rgb').trim();
+        
+        particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          if(p.x < 0) p.x = pCanvas.width;
+          if(p.x > pCanvas.width) p.x = 0;
+          if(p.y < 0) p.y = pCanvas.height;
+          if(p.y > pCanvas.height) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${color}, ${p.alpha})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(drawParticles);
+      }
+      drawParticles();
+    }
+
+    // Run
+    init();
+
   </script>
 </body>
-
 </html>
